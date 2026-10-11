@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Scheme Finder — Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">RK</div>
+        <div>
+          <h1>My Profile</h1>
+          <p>Saved only in this browser</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="row">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" />
+        </div>
+        <div>
+          <label for="occupation">Occupation</label>
+          <select id="occupation">
+            <option value="">Unknown</option>
+            <option value="farmer">Farmer</option>
+            <option value="student">Student</option>
+            <option value="senior">Senior citizen</option>
+            <option value="woman">Woman / homemaker</option>
+            <option value="worker">Worker</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="state">State</label>
+          <input id="state" placeholder="Telangana, Haryana…" />
+        </div>
+        <div>
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">Unknown</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="income">Annual income (₹)</label>
+          <input id="income" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="land">Land</label>
+          <input id="land" placeholder="2 acres" />
+        </div>
+      </div>
+      <p class="small" id="aadhaar"></p>
+      <p class="small" id="mobile"></p>
+      <button class="btn" id="save">Save profile</button>
+      <p id="saved" class="ok hidden">Profile saved.</p>
+    </section>
+
+    <section class="card">
+      <h2>My applications</h2>
+      <ul class="list" id="apps"></ul>
+      <p class="small">Demo only — nothing is sent to a government portal.</p>
+      <button class="btn ghost" id="logout">Logout</button>
+    </section>
+  </div>
+
+  <nav class="nav">
+    <a href="home.html" data-page="home">Home</a>
+    <a href="schemes.html" data-page="schemes">Schemes</a>
+    <a href="profile.html" data-page="profile" class="active">Profile</a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script>
+    const user = ASF.requireUser();
+    if (!user) throw new Error("redirect");
+    document.getElementById("name").value = user.name || "";
+    document.getElementById("occupation").value = user.occupation || "";
+    document.getElementById("state").value = user.state || "";
+    document.getElementById("gender").value = user.gender || "";
+    document.getElementById("income").value = user.annual_income || "";
+    document.getElementById("land").value = user.land || "";
+    document.getElementById("aadhaar").textContent = "Aadhaar (sample, masked): " + (user.aadhaarMasked || "XXXX-XXXX-1234");
+    document.getElementById("mobile").textContent = "Mobile: +91 " + (user.mobile || "");
+
+    document.getElementById("save").onclick = () => {
+      user.name = document.getElementById("name").value.trim() || user.name;
+      user.occupation = document.getElementById("occupation").value;
+      user.state = document.getElementById("state").value.trim();
+      user.gender = document.getElementById("gender").value;
+      const income = document.getElementById("income").value.replace(/\D/g, "");
+      user.annual_income = income ? Number(income) : null;
+      user.land = document.getElementById("land").value.trim();
+      ASF.setUser(user);
+      document.getElementById("saved").classList.remove("hidden");
+    };
+
+    const apps = ASF.getApps();
+    const list = document.getElementById("apps");
+    if (!apps.length) list.innerHTML = "<li>No applications yet. Use Apply on Home.</li>";
+    else apps.forEach((a) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${a.name}</span><span class="badge ok">${a.status}</span>`;
+      list.appendChild(li);
+    });
+
+    document.getElementById("logout").onclick = () => ASF.logout();
+  </script>
+</body>
+</html>

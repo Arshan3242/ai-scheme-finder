@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Scheme Finder — Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <h1 id="hello">Namaste</h1>
+          <p>Tell me your problem</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="chips" id="langChips"></div>
+      <div class="mic-wrap">
+        <button class="mic" id="mic" aria-label="Press and speak">MIC</button>
+      </div>
+      <p class="note" id="micHint">Press the MIC and speak. Chrome/Edge work best.</p>
+      <label for="typed">Or type your problem</label>
+      <textarea id="typed" rows="3" placeholder="Mere 12th me 85% aaye hai, papa ke paas college fees nahi hai"></textarea>
+      <button class="btn secondary" id="findBtn">Find schemes</button>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section class="card hidden" id="resultCard">
+      <p class="small">You said:</p>
+      <p class="said" id="said"></p>
+      <div id="followUp" class="alert hidden"></div>
+      <h2>Schemes for you</h2>
+      <div id="results"></div>
+    </section>
+  </div>
+
+  <nav class="nav">
+    <a href="home.html" data-page="home" class="active">Home</a>
+    <a href="schemes.html" data-page="schemes">Schemes</a>
+    <a href="profile.html" data-page="profile">Profile</a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/nlu.js"></script>
+  <script src="js/matcher.js"></script>
+  <script>
+    const user = ASF.requireUser();
+    if (!user) throw new Error("redirect");
+    document.getElementById("hello").textContent =
+      user.language === "en" ? `Hello, ${user.name}` : `Namaste, ${user.name}`;
+
+    const langs = [
+      { id: "hi", label: "Hindi" },
+      { id: "te", label: "Telugu" },
+      { id: "en", label: "English" }
+    ];
+    const chips = document.getElementById("langChips");
+    langs.forEach((l) => {
+      const b = document.createElement("button");
+      b.className = "chip" + (l.id === user.language ? " active" : "");
+      b.textContent = l.label;
+      b.onclick = () => {
+        user.language = l.id;
+        ASF.setUser(user);
+        chips.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+        b.classList.add("active");
+      };
+      chips.appendChild(b);
+    });
+
+    const status = document.getElementById("status");
+    const mic = document.getElementById("mic");
+
+    async function run(text) {
+      const transcript = (text || "").trim();
+      if (!transcript) {
+        status.textContent = "Please speak or type a problem.";
+        return;
+      }
+      status.textContent = "Understanding your problem…";
+      const profile = await NLU.extract(transcript, user);
+      if (profile.state) user.state = profile.state;
+      if (profile.occupation && profile.occupation !== "unknown") user.occupation = profile.occupation;
+      if (profile.gender && profile.gender !== "unknown") user.gender = profile.gender;
+      if (profile.annual_income) user.annual_income = profile.annual_income;
+      ASF.setUser(user);
+
+      const schemes = Matcher.match(profile, transcript, 3);
+      document.getElementById("resultCard").classList.remove("hidden");
+      document.getElementById("said").textContent = `“${transcript}”`;
+      const follow = document.getElementById("followUp");
+      if (profile.follow_up && !schemes.length) {
+        follow.textContent = profile.follow_up;
+        follow.classList.remove("hidden");
+      } else follow.classList.add("hidden");
+
+      const box = document.getElementById("results");
+      box.innerHTML = "";
+      if (!schemes.length) {
+        box.innerHTML = "<p class='alert'>No eligible scheme in this small demo database. Add state/occupation on Profile and try again.</p>";
+      } else {
+        schemes.forEach((s, i) => {
+          const el = document.createElement("article");
+          el.className = "scheme";
+          el.innerHTML = `
+            <h3>${i + 1}. ${s.name}</h3>
+            <p class="meta">${s.level} · ${s.category}</p>
+            <p class="benefit">${s.benefit}</p>
+            <p><strong>Where:</strong> ${s.applyAt}</p>
+            <p><strong>Documents:</strong></p>
+            <ul class="docs">${s.documents.map((d) => `<li>${d}</li>`).join("")}</ul>
+            <button class="btn saffron apply">Apply (demo)</button>
+          `;
+          el.querySelector(".apply").onclick = () => {
+            ASF.addApp({
+              schemeId: s.id,
+              name: s.name,
+              status: "Under review",
+              appliedOn: new Date().toISOString().slice(0, 10)
+            });
+            el.querySelector(".apply").textContent = "Saved on Profile";
+            el.querySelector(".apply").disabled = true;
+          };
+          box.appendChild(el);
+        });
+      }
+      const spoken = Matcher.replyText(schemes, profile);
+      Speech.speak(spoken, profile.reply_language || user.language);
+      status.textContent = profile.source === "gemini"
+        ? "Understood with Gemini. Showing only schemes from the local list."
+        : profile.error
+          ? `Gemini fallback (${profile.error}). Used keywords.`
+          : "Understood with keywords. Add a Gemini key on the login page for better language understanding.";
+    }
+
+    Matcher.load().catch(() => {
+      status.textContent = "Could not load schemes.json";
+    });
+
+    mic.onclick = async () => {
+      if (!Speech.supported()) {
+        status.textContent = "This browser has no speech recognition. Type instead, or use Chrome.";
+        return;
+      }
+      mic.classList.add("listening");
+      status.textContent = "Listening…";
+      try {
+        const text = await Speech.listen(user.language);
+        document.getElementById("typed").value = text;
+        await run(text);
+      } catch (err) {
+        status.textContent = "Mic error: " + err.message;
+      } finally {
+        mic.classList.remove("listening");
+      }
+    };
+
+    document.getElementById("findBtn").onclick = () => run(document.getElementById("typed").value);
+  </script>
+</body>
+</html>

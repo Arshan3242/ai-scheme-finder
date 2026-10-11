@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Scheme Finder — Schemes</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <h1>All demo schemes</h1>
+          <p>Local JSON — not a live myScheme dump</p>
+        </div>
+      </div>
+    </div>
+    <div id="list"></div>
+  </div>
+  <nav class="nav">
+    <a href="home.html" data-page="home">Home</a>
+    <a href="schemes.html" data-page="schemes" class="active">Schemes</a>
+    <a href="profile.html" data-page="profile">Profile</a>
+  </nav>
+  <script src="js/matcher.js"></script>
+  <script>
+    Matcher.load().then((schemes) => {
+      const list = document.getElementById("list");
+      schemes.forEach((s) => {
+        const el = document.createElement("article");
+        el.className = "card scheme";
+        el.innerHTML = `<h3>${s.name}</h3>
+          <p class="meta">${s.level} · ${s.category}</p>
+          <p class="benefit">${s.benefit}</p>
+          <p>${s.applyAt}</p>`;
+        list.appendChild(el);
+      });
+    });
+  </script>
+</body>
+</html>

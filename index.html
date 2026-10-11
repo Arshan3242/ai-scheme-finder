@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Scheme Finder — Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <h1>AI Scheme Finder</h1>
+          <p>Just Speak Your Problem</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card hero">
+      <h2>Speak your problem. Find the scheme.</h2>
+      <p>Demo login only. No real OTP or Aadhaar is used.</p>
+    </section>
+
+    <section class="card">
+      <label>Choose language</label>
+      <div class="chips" id="langChips"></div>
+
+      <label for="mobile">Mobile number</label>
+      <input id="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit number" />
+
+      <label for="otp">OTP (any 6 digits for this demo)</label>
+      <input id="otp" inputmode="numeric" maxlength="6" placeholder="123456" />
+
+      <p class="small">New users are created automatically after this demo OTP.</p>
+      <button class="btn" id="loginBtn">Login with OTP</button>
+      <p class="or">Shows only sample schemes inspired by myscheme.gov.in</p>
+    </section>
+
+    <section class="card">
+      <label for="apiKey">Gemini API key (stored only on this device)</label>
+      <input id="apiKey" type="password" placeholder="Paste key — never committed to GitHub" />
+      <p class="small">Voice understanding uses Gemini Flash. If the key is missing, keyword matching still works.</p>
+      <button class="btn secondary" id="saveKey">Save key on this browser</button>
+      <p id="keyStatus" class="status"></p>
+    </section>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const langs = [
+      { id: "hi", label: "Hindi" },
+      { id: "te", label: "Telugu" },
+      { id: "en", label: "English" }
+    ];
+    let language = "hi";
+    const chips = document.getElementById("langChips");
+    langs.forEach((l) => {
+      const b = document.createElement("button");
+      b.className = "chip" + (l.id === language ? " active" : "");
+      b.textContent = l.label;
+      b.onclick = () => {
+        language = l.id;
+        chips.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+        b.classList.add("active");
+      };
+      chips.appendChild(b);
+    });
+
+    document.getElementById("apiKey").value = ASF.getKey();
+    document.getElementById("saveKey").onclick = () => {
+      ASF.setKey(document.getElementById("apiKey").value);
+      document.getElementById("keyStatus").textContent = ASF.getKey()
+        ? "Key saved in this browser only."
+        : "Key cleared.";
+    };
+
+    document.getElementById("loginBtn").onclick = () => {
+      const mobile = document.getElementById("mobile").value.replace(/\D/g, "");
+      const otp = document.getElementById("otp").value.replace(/\D/g, "");
+      if (mobile.length !== 10) {
+        alert("Enter a 10-digit mobile number.");
+        return;
+      }
+      if (otp.length !== 6) {
+        alert("Enter any 6-digit demo OTP.");
+        return;
+      }
+      const existing = ASF.getUser();
+      ASF.setUser({
+        name: existing?.name || "Ramesh Kumar",
+        mobile,
+        language,
+        occupation: existing?.occupation || "",
+        state: existing?.state || "",
+        gender: existing?.gender || "",
+        annual_income: existing?.annual_income || null,
+        land: existing?.land || "",
+        aadhaarMasked: "XXXX-XXXX-1234"
+      });
+      location.href = "home.html";
+    };
+  </script>
+</body>
+</html>
