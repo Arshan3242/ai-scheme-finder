@@ -36,13 +36,24 @@ Option C — GitHub Pages, see "Hosting" below.
 | --- | --- |
 | Bolna — speak | Web Speech API `SpeechRecognition` (`js/speech.js`), with a text box fallback for noisy rooms |
 | Samajhna — understand | `js/nlu.js`: one Gemini Flash call that returns a JSON profile (occupation, state, gender, income, age, need). With no key, or if the call fails, a keyword + regex fallback in the same file takes over |
-| Batana — tell | `js/matcher.js` scores `data/schemes.js` on eligibility, keeps the top 3, and speaks the reply with `speechSynthesis` |
+| Batana — tell | `js/matcher.js` scores `data/schemes.js` (193 schemes) on eligibility, keeps the top 3, and speaks the reply with `speechSynthesis` |
 
 The model only ever extracts a profile. Schemes, amounts, offices and documents come from the
 local data file, so the model cannot invent a scheme. That is the point worth making in viva.
 
-If the state is missing, the app asks exactly one follow-up question (voice + text), then re-runs
-the match with both utterances — the activity diagram in the report.
+### How the matching avoids nonsense
+
+With 193 schemes, almost every record passes every filter, so a plain weighted sum returns noise.
+`js/matcher.js` therefore requires **evidence**: a scheme must match the stated occupation, the
+stated state, the gender, the age of a senior-only scheme, or a keyword the citizen actually used.
+Keyword hits are weighted by how rare the word is across the file (`df()`), state names do not
+count as keyword evidence (saying "Bihar" proves where you live, not what you need), short keywords
+are matched on word boundaries so `sc` cannot match "scholarship", and a record with no evidence at
+all is pushed below the cut-off. Each result card shows the reasons it ranked, so the scoring is
+explainable on stage.
+
+If the state or occupation is missing, the app asks exactly one follow-up question (voice + text),
+then re-runs the match with both utterances — the activity diagram in the report.
 
 ## Hosting on GitHub Pages
 
@@ -81,16 +92,24 @@ production components listed in section 7 of the report, kept as future work.
 ```
 index.html      login (language, mobile, demo OTP, optional Gemini key)
 home.html       MIC + "You said" + scheme cards + Apply
-schemes.html    browse the local scheme database
+schemes.html    search, category / state / level filters over the whole database
 profile.html    saved profile + fake application list
 css/style.css   one stylesheet
 js/app.js       localStorage session
 js/speech.js    speech recognition + speech synthesis
 js/nlu.js       Gemini profile extraction + keyword fallback
 js/matcher.js   eligibility scoring + spoken reply
-data/schemes.js 18 schemes as a plain JS array
+data/schemes.js 193 schemes as a plain JS array
+tools/build_schemes.py  regenerates data/schemes.js from a 14-column text table
 ```
 
 `data/schemes.js` is a JSON array assigned to `window.SCHEMES`. It is a `.js` file rather than
 `.json` on purpose: Chrome blocks `fetch()` of local files, so a `.json` data file would break
 option A above. The data itself is unchanged JSON.
+
+The site has no build step; `tools/build_schemes.py` is only there so 193 schemes stay editable as
+one line each. Run it after editing that file:
+
+```
+python tools/build_schemes.py   # rewrites data/schemes.js, nothing else
+```

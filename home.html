@@ -106,12 +106,13 @@
       if (profile.age) user.age = profile.age;
       ASF.setUser(user);
 
-      const schemes = Matcher.match(profile, transcript, 3);
+      const rows = Matcher.ranked(profile, transcript, 3);
+      const schemes = rows.map((row) => row.scheme);
       document.getElementById("resultCard").classList.remove("hidden");
       document.getElementById("said").textContent = `“${transcript}”`;
 
       // One clarifying question, like the activity diagram in the report.
-      if (profile.follow_up && !user.state && !askedOnce) {
+      if (profile.follow_up && !askedOnce) {
         askedOnce = true;
         document.getElementById("followUpQ").textContent = profile.follow_up;
         followBox.classList.remove("hidden");
@@ -120,20 +121,22 @@
 
       const box = document.getElementById("results");
       box.innerHTML = "";
-      if (!schemes.length) {
-        box.innerHTML = "<p class='alert'>No eligible scheme in this small demo database. Add state/occupation on Profile and try again.</p>";
+      if (!rows.length) {
+        box.innerHTML = "<p class='alert'>Nothing matched strongly enough in the local scheme file. Add state, occupation or income on Profile, or say what you need in plain words.</p>";
       } else {
-        schemes.forEach((s, i) => {
+        rows.forEach((row, i) => {
+          const s = row.scheme;
           const el = document.createElement("article");
           el.className = "scheme";
           el.innerHTML = `
             <h3>${i + 1}. ${s.name}</h3>
             <p class="meta">${s.level} · ${s.category}</p>
             <p class="benefit">${s.benefit}</p>
+            <p class="why">${row.reasons.join(" · ") || "matches your profile"}</p>
             <p><strong>Where:</strong> ${s.applyAt}</p>
             <p><strong>Documents:</strong></p>
             <ul class="docs">${s.documents.map((d) => `<li>${d}</li>`).join("")}</ul>
-            <a class="link" href="${s.applyLink}" target="_blank" rel="noopener">Official site</a>
+            ${s.applyLink ? `<a class="link" href="${s.applyLink}" target="_blank" rel="noopener">Official site</a>` : ""}
             <button class="btn saffron apply">Apply (demo)</button>
           `;
           el.querySelector(".apply").onclick = () => {

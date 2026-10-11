@@ -13,11 +13,28 @@
         <div class="logo">AS</div>
         <div>
           <h1>All demo schemes</h1>
-          <p>Local scheme file — not a live myScheme dump</p>
+          <p>Filter the local scheme file</p>
         </div>
       </div>
     </div>
     <p class="small" id="count"></p>
+
+    <section class="card filter">
+      <label for="q">Search</label>
+      <input id="q" placeholder="scholarship, borewell, pension, divyang…" autocomplete="off" />
+      <div class="row">
+        <div>
+          <label for="cat">Category</label>
+          <select id="cat"></select>
+        </div>
+        <div>
+          <label for="state">State</label>
+          <select id="state"></select>
+        </div>
+      </div>
+      <div class="chips" id="levelChips"></div>
+    </section>
+
     <div id="list"></div>
   </div>
   <nav class="nav">
@@ -28,18 +45,71 @@
   <script src="data/schemes.js"></script>
   <script src="js/matcher.js"></script>
   <script>
+    const all = Matcher.all();
     const list = document.getElementById("list");
-    Matcher.all().forEach((s) => {
-      const el = document.createElement("article");
-      el.className = "card scheme";
-      el.innerHTML = `<h3>${s.name}</h3>
-        <p class="meta">${s.level} · ${s.category}</p>
-        <p class="benefit">${s.benefit}</p>
-        <p>${s.applyAt}</p>
-        <p class="small">${s.documents.join(" · ")}</p>`;
-      list.appendChild(el);
+    const q = document.getElementById("q");
+    const cat = document.getElementById("cat");
+    const stateSel = document.getElementById("state");
+
+    const cats = [...new Set(all.map((s) => s.category))].sort();
+    cat.innerHTML = `<option value="">All categories</option>` +
+      cats.map((c) => `<option value="${c}">${c} (${all.filter((s) => s.category === c).length})</option>`).join("");
+
+    const states = [...new Set(all.flatMap((s) => s.eligibility.states))].filter((s) => s !== "all").sort();
+    stateSel.innerHTML = `<option value="">All states</option>` +
+      states.map((s) => `<option value="${s}">${s}</option>`).join("");
+
+    let level = "";
+    const levels = ["", "central", "state"];
+    const levelChips = document.getElementById("levelChips");
+    levels.forEach((l) => {
+      const b = document.createElement("button");
+      b.className = "chip" + (l === level ? " active" : "");
+      b.textContent = l || "both levels";
+      b.onclick = () => {
+        level = l;
+        levelChips.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+        b.classList.add("active");
+        render();
+      };
+      levelChips.appendChild(b);
     });
-    document.getElementById("count").textContent = Matcher.all().length + " schemes loaded, no server needed.";
+
+    function render() {
+      const needle = q.value.trim().toLowerCase();
+      const rows = all.filter((s) => {
+        if (cat.value && s.category !== cat.value) return false;
+        if (level && s.level !== level) return false;
+        if (stateSel.value && !s.eligibility.states.includes(stateSel.value)) return false;
+        if (!needle) return true;
+        const hay = [s.name, s.benefit, s.applyAt, s.category, ...s.eligibility.keywords].join(" ").toLowerCase();
+        return needle.split(/\s+/).every((w) => hay.includes(w));
+      });
+      document.getElementById("count").textContent =
+        `${rows.length} of ${all.length} schemes shown · illustrative amounts for a student demo, not a live myScheme dump.`;
+      list.innerHTML = "";
+      const groups = [...new Set(rows.map((s) => s.category))];
+      groups.forEach((c) => {
+        const head = document.createElement("h2");
+        head.className = "group";
+        head.textContent = `${c} · ${rows.filter((s) => s.category === c).length}`;
+        list.appendChild(head);
+        rows.filter((s) => s.category === c).forEach((s) => {
+          const el = document.createElement("article");
+          el.className = "card scheme";
+          el.innerHTML = `<h3>${s.name}</h3>
+            <p class="meta">${s.level} · ${s.eligibility.states.join(", ")} · ${s.eligibility.minAge}+</p>
+            <p class="benefit">${s.benefit}</p>
+            <p>${s.applyAt}</p>
+            <p class="small">${s.documents.join(" · ")}</p>`;
+          list.appendChild(el);
+        });
+      });
+      if (!rows.length) list.innerHTML = `<p class="alert">No scheme matches. Clear the search or pick another category.</p>`;
+    }
+
+    [q, cat, stateSel].forEach((node) => node.addEventListener("input", render));
+    render();
   </script>
 </body>
 </html>
