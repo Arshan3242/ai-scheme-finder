@@ -1,5 +1,7 @@
 # AI Scheme Finder
 
+**Live demo:** https://azad3242.github.io/ai-scheme-finder/ · **Code:** https://github.com/Azad3242/ai-scheme-finder
+
 Static, no-build, no-npm website for the "AI Scheme Finder" project: a citizen speaks or types a
 problem in Hindi / Telugu / English, and the app replies with 2–3 government schemes they are
 eligible for — the amount, the office to visit, and the documents to carry.
@@ -43,11 +45,14 @@ the match with both utterances — the activity diagram in the report.
 
 ## Hosting on GitHub Pages
 
-1. Push this folder to a GitHub repository (main branch).
-2. Repo → Settings → Pages → Source: **Deploy from a branch**, branch `main`, folder `/ (root)`, Save.
-3. The site appears at `https://<user>.github.io/<repo>/` after a minute.
+Already live at https://azad3242.github.io/ai-scheme-finder/. To redeploy after an edit, just push:
 
-No build step, no workflow file, no dependencies.
+```
+git push origin main
+```
+
+Pages is configured as Source: branch `main`, folder `/ (root)`. No build step, no workflow file,
+no dependencies. The `.nojekyll` file keeps Jekyll from touching the folder.
 
 ## Security
 
