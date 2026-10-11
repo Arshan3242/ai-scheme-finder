@@ -1,6 +1,7 @@
 # AI Scheme Finder
 
-**Live demo:** https://azad3242.github.io/ai-scheme-finder/ · **Code:** https://github.com/Azad3242/ai-scheme-finder
+**Live demo:** https://azad3242.github.io/ai-scheme-finder/ or https://arshan3242.github.io/ai-scheme-finder/
+(mirror) · **Code:** https://github.com/Azad3242/ai-scheme-finder
 
 Static, no-build, no-npm website for the "AI Scheme Finder" project: a citizen speaks or types a
 problem in Hindi / Telugu / English, and the app replies with 2–3 government schemes they are
@@ -45,14 +46,17 @@ the match with both utterances — the activity diagram in the report.
 
 ## Hosting on GitHub Pages
 
-Already live at https://azad3242.github.io/ai-scheme-finder/. To redeploy after an edit, just push:
+Live at https://azad3242.github.io/ai-scheme-finder/ and mirrored at
+https://arshan3242.github.io/ai-scheme-finder/. The local clone has two remotes, so one edit
+publishes to both:
 
 ```
 git push origin main
+git push arshan main
 ```
 
-Pages is configured as Source: branch `main`, folder `/ (root)`. No build step, no workflow file,
-no dependencies. The `.nojekyll` file keeps Jekyll from touching the folder.
+Pages is configured on each repo as Source: branch `main`, folder `/ (root)`. No build step, no
+workflow file, no dependencies. The `.nojekyll` file keeps Jekyll from touching the folder.
 
 ## Security
 
