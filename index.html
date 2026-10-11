@@ -54,7 +54,7 @@
       { id: "te", label: "Telugu" },
       { id: "en", label: "English" }
     ];
-    let language = "hi";
+    let language = ASF.getUser()?.language || "hi";
     const chips = document.getElementById("langChips");
     langs.forEach((l) => {
       const b = document.createElement("button");
@@ -96,6 +96,7 @@
         state: existing?.state || "",
         gender: existing?.gender || "",
         annual_income: existing?.annual_income || null,
+        age: existing?.age || null,
         land: existing?.land || "",
         aadhaarMasked: "XXXX-XXXX-1234"
       });

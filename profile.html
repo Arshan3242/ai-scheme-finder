@@ -60,6 +60,20 @@
           <input id="land" placeholder="2 acres" />
         </div>
       </div>
+      <div class="row">
+        <div>
+          <label for="age">Age</label>
+          <input id="age" inputmode="numeric" placeholder="68" />
+        </div>
+        <div>
+          <label for="language">Language</label>
+          <select id="language">
+            <option value="hi">Hindi</option>
+            <option value="te">Telugu</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
       <p class="small" id="aadhaar"></p>
       <p class="small" id="mobile"></p>
       <button class="btn" id="save">Save profile</button>
@@ -90,6 +104,8 @@
     document.getElementById("gender").value = user.gender || "";
     document.getElementById("income").value = user.annual_income || "";
     document.getElementById("land").value = user.land || "";
+    document.getElementById("age").value = user.age || "";
+    document.getElementById("language").value = user.language || "hi";
     document.getElementById("aadhaar").textContent = "Aadhaar (sample, masked): " + (user.aadhaarMasked || "XXXX-XXXX-1234");
     document.getElementById("mobile").textContent = "Mobile: +91 " + (user.mobile || "");
 
@@ -101,6 +117,9 @@
       const income = document.getElementById("income").value.replace(/\D/g, "");
       user.annual_income = income ? Number(income) : null;
       user.land = document.getElementById("land").value.trim();
+      const age = document.getElementById("age").value.replace(/\D/g, "");
+      user.age = age ? Number(age) : null;
+      user.language = document.getElementById("language").value;
       ASF.setUser(user);
       document.getElementById("saved").classList.remove("hidden");
     };

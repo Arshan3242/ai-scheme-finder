@@ -46,6 +46,17 @@ const NLU = {
 
     const marks = t.match(/(\d{2})\s*%/);
     if (marks) profile.marks = Number(marks[1]);
+
+    // ₹2 lakh / 2 lac income, plain rupee figures, and age in years.
+    const lakh = t.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|laksh)/);
+    if (lakh) profile.annual_income = Math.round(Number(lakh[1]) * 100000);
+    else {
+      const rupees = t.match(/(?:₹|rs\.?|rupee|rupay)\s*(\d{4,7})/);
+      if (rupees) profile.annual_income = Number(rupees[1]);
+    }
+    const years = t.match(/(\d{2,3})\s*(?:saal|saal[ke]?\s*(?:ka|ki|ke)|years?\b)/);
+    if (years) profile.age = Number(years[1]);
+
     if (!profile.state && !user.state) {
       profile.follow_up = user.language === "te"
         ? "Mee state eedi?"

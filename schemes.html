@@ -13,10 +13,11 @@
         <div class="logo">AS</div>
         <div>
           <h1>All demo schemes</h1>
-          <p>Local JSON — not a live myScheme dump</p>
+          <p>Local scheme file — not a live myScheme dump</p>
         </div>
       </div>
     </div>
+    <p class="small" id="count"></p>
     <div id="list"></div>
   </div>
   <nav class="nav">
@@ -24,20 +25,21 @@
     <a href="schemes.html" data-page="schemes" class="active">Schemes</a>
     <a href="profile.html" data-page="profile">Profile</a>
   </nav>
+  <script src="data/schemes.js"></script>
   <script src="js/matcher.js"></script>
   <script>
-    Matcher.load().then((schemes) => {
-      const list = document.getElementById("list");
-      schemes.forEach((s) => {
-        const el = document.createElement("article");
-        el.className = "card scheme";
-        el.innerHTML = `<h3>${s.name}</h3>
-          <p class="meta">${s.level} · ${s.category}</p>
-          <p class="benefit">${s.benefit}</p>
-          <p>${s.applyAt}</p>`;
-        list.appendChild(el);
-      });
+    const list = document.getElementById("list");
+    Matcher.all().forEach((s) => {
+      const el = document.createElement("article");
+      el.className = "card scheme";
+      el.innerHTML = `<h3>${s.name}</h3>
+        <p class="meta">${s.level} · ${s.category}</p>
+        <p class="benefit">${s.benefit}</p>
+        <p>${s.applyAt}</p>
+        <p class="small">${s.documents.join(" · ")}</p>`;
+      list.appendChild(el);
     });
+    document.getElementById("count").textContent = Matcher.all().length + " schemes loaded, no server needed.";
   </script>
 </body>
 </html>

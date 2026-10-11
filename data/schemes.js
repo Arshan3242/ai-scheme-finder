@@ -1,4 +1,5 @@
-[
+// Scheme database. Plain JS so the site works with no server (file:// blocks fetch of .json).
+window.SCHEMES = [
   {
     "id": "pm-kisan",
     "name": "PM-KISAN",
@@ -7,15 +8,30 @@
     "level": "central",
     "benefit": "₹6,000 per year in 3 instalments",
     "applyAt": "pmkisan.gov.in or local agriculture office",
-    "documents": ["Aadhaar", "land records", "bank passbook"],
+    "documents": [
+      "Aadhaar",
+      "land records",
+      "bank passbook"
+    ],
     "applyLink": "https://pmkisan.gov.in",
     "eligibility": {
-      "occupations": ["farmer"],
-      "states": ["all"],
+      "occupations": [
+        "farmer"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["kisan", "farmer", "paisa", "income support", "kheti", "acre"]
+      "keywords": [
+        "kisan",
+        "farmer",
+        "paisa",
+        "income support",
+        "kheti",
+        "acre"
+      ]
     }
   },
   {
@@ -26,15 +42,32 @@
     "level": "central",
     "benefit": "Subsidy on drip / sprinkler / pump set (often 45–55%)",
     "applyAt": "District agriculture / horticulture office",
-    "documents": ["Aadhaar", "land records", "bank passbook", "passport photo"],
+    "documents": [
+      "Aadhaar",
+      "land records",
+      "bank passbook",
+      "passport photo"
+    ],
     "applyLink": "https://pmksy.gov.in",
     "eligibility": {
-      "occupations": ["farmer"],
-      "states": ["all"],
+      "occupations": [
+        "farmer"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["borewell", "irrigation", "water", "pump", "drip", "sinchai", "paani"]
+      "keywords": [
+        "borewell",
+        "irrigation",
+        "water",
+        "pump",
+        "drip",
+        "sinchai",
+        "paani"
+      ]
     }
   },
   {
@@ -45,15 +78,31 @@
     "level": "state",
     "benefit": "About 50% subsidy on borewell and related irrigation work (illustrative)",
     "applyAt": "Mandal agriculture office / MESEVA",
-    "documents": ["Aadhaar", "pahani / land record", "income certificate", "caste certificate if asked"],
+    "documents": [
+      "Aadhaar",
+      "pahani / land record",
+      "income certificate",
+      "caste certificate if asked"
+    ],
     "applyLink": "https://www.myscheme.gov.in",
     "eligibility": {
-      "occupations": ["farmer"],
-      "states": ["Telangana"],
+      "occupations": [
+        "farmer"
+      ],
+      "states": [
+        "Telangana"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["borewell", "ekaralu", "irrigation", "telangana", "pump", "water"]
+      "keywords": [
+        "borewell",
+        "ekaralu",
+        "irrigation",
+        "telangana",
+        "pump",
+        "water"
+      ]
     }
   },
   {
@@ -64,15 +113,33 @@
     "level": "central",
     "benefit": "₹50,000 per year (illustrative AICTE amount)",
     "applyAt": "National Scholarship Portal / AICTE Pragati",
-    "documents": ["Aadhaar", "12th marksheet", "income certificate", "college ID", "bank passbook"],
+    "documents": [
+      "Aadhaar",
+      "12th marksheet",
+      "income certificate",
+      "college ID",
+      "bank passbook"
+    ],
     "applyLink": "https://scholarships.gov.in",
     "eligibility": {
-      "occupations": ["student"],
-      "states": ["all"],
+      "occupations": [
+        "student"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 800000,
       "gender": "female",
       "minAge": 16,
-      "keywords": ["college", "fees", "12th", "scholarship", "girl", "pragati", "padhai"]
+      "keywords": [
+        "college",
+        "fees",
+        "12th",
+        "scholarship",
+        "girl",
+        "pragati",
+        "padhai"
+      ]
     }
   },
   {
@@ -83,15 +150,31 @@
     "level": "state",
     "benefit": "Tuition / fees support; in many cases full fee waiver for eligible categories",
     "applyAt": "Haryana scholarship portal or college office",
-    "documents": ["Aadhaar", "12th marksheet", "caste / income certificate", "domicile of Haryana"],
+    "documents": [
+      "Aadhaar",
+      "12th marksheet",
+      "caste / income certificate",
+      "domicile of Haryana"
+    ],
     "applyLink": "https://harchhatravratti.higheredu.hry.gov.in",
     "eligibility": {
-      "occupations": ["student"],
-      "states": ["Haryana"],
+      "occupations": [
+        "student"
+      ],
+      "states": [
+        "Haryana"
+      ],
       "maxIncome": 250000,
       "gender": "any",
       "minAge": 16,
-      "keywords": ["college", "fees", "12th", "haryana", "faridabad", "scholarship"]
+      "keywords": [
+        "college",
+        "fees",
+        "12th",
+        "haryana",
+        "faridabad",
+        "scholarship"
+      ]
     }
   },
   {
@@ -102,15 +185,30 @@
     "level": "central",
     "benefit": "Need-based scholarship for eligible students after class 10/12",
     "applyAt": "scholarships.gov.in",
-    "documents": ["Aadhaar", "marksheet", "income certificate", "caste certificate if applicable"],
+    "documents": [
+      "Aadhaar",
+      "marksheet",
+      "income certificate",
+      "caste certificate if applicable"
+    ],
     "applyLink": "https://scholarships.gov.in",
     "eligibility": {
-      "occupations": ["student"],
-      "states": ["all"],
+      "occupations": [
+        "student"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 250000,
       "gender": "any",
       "minAge": 15,
-      "keywords": ["fees", "college", "scholarship", "12th", "padhai"]
+      "keywords": [
+        "fees",
+        "college",
+        "scholarship",
+        "12th",
+        "padhai"
+      ]
     }
   },
   {
@@ -121,15 +219,31 @@
     "level": "central",
     "benefit": "Monthly pension (amount varies by state; often ₹200–₹1000+)",
     "applyAt": "Block / tehsil social welfare office or e-District",
-    "documents": ["Aadhaar", "age proof", "income / BPL proof", "bank passbook", "2 photos"],
+    "documents": [
+      "Aadhaar",
+      "age proof",
+      "income / BPL proof",
+      "bank passbook",
+      "2 photos"
+    ],
     "applyLink": "https://nsap.nic.in",
     "eligibility": {
-      "occupations": ["senior"],
-      "states": ["all"],
+      "occupations": [
+        "senior"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 150000,
       "gender": "any",
       "minAge": 60,
-      "keywords": ["pension", "budhapa", "old", "elderly", "senior"]
+      "keywords": [
+        "pension",
+        "budhapa",
+        "old",
+        "elderly",
+        "senior"
+      ]
     }
   },
   {
@@ -140,15 +254,30 @@
     "level": "state",
     "benefit": "Monthly samman allowance for eligible senior citizens of Haryana",
     "applyAt": "Antyodaya SARAL / social welfare",
-    "documents": ["Aadhaar", "age proof", "Haryana residence", "bank passbook", "2 photos"],
+    "documents": [
+      "Aadhaar",
+      "age proof",
+      "Haryana residence",
+      "bank passbook",
+      "2 photos"
+    ],
     "applyLink": "https://saralharyana.gov.in",
     "eligibility": {
-      "occupations": ["senior"],
-      "states": ["Haryana"],
+      "occupations": [
+        "senior"
+      ],
+      "states": [
+        "Haryana"
+      ],
       "maxIncome": 200000,
       "gender": "any",
       "minAge": 60,
-      "keywords": ["pension", "budhapa", "haryana", "old"]
+      "keywords": [
+        "pension",
+        "budhapa",
+        "haryana",
+        "old"
+      ]
     }
   },
   {
@@ -159,15 +288,33 @@
     "level": "central",
     "benefit": "Financial assistance to build a pucca house (amount varies by region)",
     "applyAt": "Gram panchayat / rural development office",
-    "documents": ["Aadhaar", "SECC / deprivation proof", "bank passbook", "land / site details"],
+    "documents": [
+      "Aadhaar",
+      "SECC / deprivation proof",
+      "bank passbook",
+      "land / site details"
+    ],
     "applyLink": "https://pmayg.nic.in",
     "eligibility": {
-      "occupations": ["farmer", "worker", "woman", "senior"],
-      "states": ["all"],
+      "occupations": [
+        "farmer",
+        "worker",
+        "woman",
+        "senior"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 300000,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["house", "ghar", "awas", "pucca", "housing"]
+      "keywords": [
+        "house",
+        "ghar",
+        "awas",
+        "pucca",
+        "housing"
+      ]
     }
   },
   {
@@ -178,15 +325,33 @@
     "level": "central",
     "benefit": "Interest subsidy / assistance for eligible urban housing",
     "applyAt": "ULB / municipal office / PMAY-U portal",
-    "documents": ["Aadhaar", "income proof", "residence proof", "bank passbook"],
+    "documents": [
+      "Aadhaar",
+      "income proof",
+      "residence proof",
+      "bank passbook"
+    ],
     "applyLink": "https://pmaymis.gov.in",
     "eligibility": {
-      "occupations": ["worker", "woman", "student", "farmer"],
-      "states": ["all"],
+      "occupations": [
+        "worker",
+        "woman",
+        "student",
+        "farmer"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 600000,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["house", "flat", "ghar", "urban", "awas"]
+      "keywords": [
+        "house",
+        "flat",
+        "ghar",
+        "urban",
+        "awas"
+      ]
     }
   },
   {
@@ -197,15 +362,32 @@
     "level": "central",
     "benefit": "LPG connection support for eligible women from poor households",
     "applyAt": "Nearby LPG distributor",
-    "documents": ["Aadhaar", "BPL / ration card", "bank account of woman applicant", "address proof"],
+    "documents": [
+      "Aadhaar",
+      "BPL / ration card",
+      "bank account of woman applicant",
+      "address proof"
+    ],
     "applyLink": "https://www.pmuy.gov.in",
     "eligibility": {
-      "occupations": ["woman", "farmer", "worker"],
-      "states": ["all"],
+      "occupations": [
+        "woman",
+        "farmer",
+        "worker"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 250000,
       "gender": "female",
       "minAge": 18,
-      "keywords": ["gas", "lpg", "ujjwala", "cooking", "chulha"]
+      "keywords": [
+        "gas",
+        "lpg",
+        "ujjwala",
+        "cooking",
+        "chulha"
+      ]
     }
   },
   {
@@ -216,15 +398,29 @@
     "level": "central",
     "benefit": "Cash assistance for institutional delivery",
     "applyAt": "Government hospital / ANM / ASHA",
-    "documents": ["Aadhaar", "MCP card", "bank passbook"],
+    "documents": [
+      "Aadhaar",
+      "MCP card",
+      "bank passbook"
+    ],
     "applyLink": "https://nhm.gov.in",
     "eligibility": {
-      "occupations": ["woman"],
-      "states": ["all"],
+      "occupations": [
+        "woman"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "female",
       "minAge": 18,
-      "keywords": ["delivery", "pregnant", "hospital", "janani", "baby"]
+      "keywords": [
+        "delivery",
+        "pregnant",
+        "hospital",
+        "janani",
+        "baby"
+      ]
     }
   },
   {
@@ -235,15 +431,32 @@
     "level": "central",
     "benefit": "Health cover up to ₹5 lakh per family per year for eligible families",
     "applyAt": "Empanelled hospital / Common Service Centre",
-    "documents": ["Aadhaar", "ration card / SECC details"],
+    "documents": [
+      "Aadhaar",
+      "ration card / SECC details"
+    ],
     "applyLink": "https://pmjay.gov.in",
     "eligibility": {
-      "occupations": ["farmer", "worker", "senior", "woman"],
-      "states": ["all"],
+      "occupations": [
+        "farmer",
+        "worker",
+        "senior",
+        "woman"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": 300000,
       "gender": "any",
       "minAge": 0,
-      "keywords": ["hospital", "bimari", "health", "operation", "ayushman", "ilaj"]
+      "keywords": [
+        "hospital",
+        "bimari",
+        "health",
+        "operation",
+        "ayushman",
+        "ilaj"
+      ]
     }
   },
   {
@@ -254,15 +467,30 @@
     "level": "central",
     "benefit": "Working capital loan starting ₹10,000 with interest subsidy",
     "applyAt": "ULB / lending bank / PM SVANidhi portal",
-    "documents": ["Aadhaar", "vendor certificate / Letter of Recommendation", "bank passbook"],
+    "documents": [
+      "Aadhaar",
+      "vendor certificate / Letter of Recommendation",
+      "bank passbook"
+    ],
     "applyLink": "https://pmsvanidhi.mohua.gov.in",
     "eligibility": {
-      "occupations": ["worker"],
-      "states": ["all"],
+      "occupations": [
+        "worker"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["thela", "vendor", "dukan", "loan", "street", "business"]
+      "keywords": [
+        "thela",
+        "vendor",
+        "dukan",
+        "loan",
+        "street",
+        "business"
+      ]
     }
   },
   {
@@ -273,15 +501,32 @@
     "level": "central",
     "benefit": "Collateral-free business loan (Shishu / Kishore / Tarun)",
     "applyAt": "Bank / MFI / mudra.org.in",
-    "documents": ["Aadhaar", "business details", "bank passbook", "quotations if asked"],
+    "documents": [
+      "Aadhaar",
+      "business details",
+      "bank passbook",
+      "quotations if asked"
+    ],
     "applyLink": "https://www.mudra.org.in",
     "eligibility": {
-      "occupations": ["worker", "farmer", "woman"],
-      "states": ["all"],
+      "occupations": [
+        "worker",
+        "farmer",
+        "woman"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["loan", "business", "dukan", "mudra", "vyapar"]
+      "keywords": [
+        "loan",
+        "business",
+        "dukan",
+        "mudra",
+        "vyapar"
+      ]
     }
   },
   {
@@ -292,15 +537,31 @@
     "level": "central",
     "benefit": "Zero-balance bank account, RuPay card, insurance cover as per scheme rules",
     "applyAt": "Any bank branch / BC point",
-    "documents": ["Aadhaar", "photo"],
+    "documents": [
+      "Aadhaar",
+      "photo"
+    ],
     "applyLink": "https://pmjdy.gov.in",
     "eligibility": {
-      "occupations": ["farmer", "student", "senior", "woman", "worker"],
-      "states": ["all"],
+      "occupations": [
+        "farmer",
+        "student",
+        "senior",
+        "woman",
+        "worker"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 10,
-      "keywords": ["account", "bank", "jan dhan", "khata"]
+      "keywords": [
+        "account",
+        "bank",
+        "jan dhan",
+        "khata"
+      ]
     }
   },
   {
@@ -311,15 +572,30 @@
     "level": "central",
     "benefit": "High-interest savings account for a girl child",
     "applyAt": "Post office or authorised bank",
-    "documents": ["Aadhaar of parent", "girl child's birth certificate"],
+    "documents": [
+      "Aadhaar of parent",
+      "girl child's birth certificate"
+    ],
     "applyLink": "https://www.nsiindia.gov.in",
     "eligibility": {
-      "occupations": ["woman", "worker", "farmer"],
-      "states": ["all"],
+      "occupations": [
+        "woman",
+        "worker",
+        "farmer"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 18,
-      "keywords": ["beti", "girl child", "sukanya", "bachchi", "saving"]
+      "keywords": [
+        "beti",
+        "girl child",
+        "sukanya",
+        "bachchi",
+        "saving"
+      ]
     }
   },
   {
@@ -330,15 +606,30 @@
     "level": "central",
     "benefit": "Universal Account Number; gateway to social security for unorganised workers",
     "applyAt": "eshram.gov.in or CSC",
-    "documents": ["Aadhaar", "bank passbook", "mobile number"],
+    "documents": [
+      "Aadhaar",
+      "bank passbook",
+      "mobile number"
+    ],
     "applyLink": "https://eshram.gov.in",
     "eligibility": {
-      "occupations": ["worker", "farmer"],
-      "states": ["all"],
+      "occupations": [
+        "worker",
+        "farmer"
+      ],
+      "states": [
+        "all"
+      ],
       "maxIncome": null,
       "gender": "any",
       "minAge": 16,
-      "keywords": ["mazdoor", "labour", "unorganised", "eshram", "worker"]
+      "keywords": [
+        "mazdoor",
+        "labour",
+        "unorganised",
+        "eshram",
+        "worker"
+      ]
     }
   }
-]
+];

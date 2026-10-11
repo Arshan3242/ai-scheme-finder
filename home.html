@@ -33,7 +33,12 @@
     <section class="card hidden" id="resultCard">
       <p class="small">You said:</p>
       <p class="said" id="said"></p>
-      <div id="followUp" class="alert hidden"></div>
+      <div id="followUp" class="ask hidden">
+        <p id="followUpQ"></p>
+        <input id="followUpA" placeholder="Type your answer" />
+        <button class="btn secondary" id="followUpSend">Send answer</button>
+        <button class="btn ghost" id="followUpSkip">Skip</button>
+      </div>
       <h2>Schemes for you</h2>
       <div id="results"></div>
     </section>
@@ -45,6 +50,7 @@
     <a href="profile.html" data-page="profile">Profile</a>
   </nav>
 
+  <script src="data/schemes.js"></script>
   <script src="js/app.js"></script>
   <script src="js/speech.js"></script>
   <script src="js/nlu.js"></script>
@@ -76,29 +82,41 @@
 
     const status = document.getElementById("status");
     const mic = document.getElementById("mic");
+    const followBox = document.getElementById("followUp");
+    let turns = [];
+    let askedOnce = false;
 
-    async function run(text) {
-      const transcript = (text || "").trim();
-      if (!transcript) {
+    function hideFollowUp() {
+      followBox.classList.add("hidden");
+    }
+
+    async function run(spoken) {
+      const text = (spoken || "").trim();
+      if (!text) {
         status.textContent = "Please speak or type a problem.";
         return;
       }
       status.textContent = "Understanding your problem…";
+      const transcript = turns.join(" ");
       const profile = await NLU.extract(transcript, user);
       if (profile.state) user.state = profile.state;
       if (profile.occupation && profile.occupation !== "unknown") user.occupation = profile.occupation;
       if (profile.gender && profile.gender !== "unknown") user.gender = profile.gender;
       if (profile.annual_income) user.annual_income = profile.annual_income;
+      if (profile.age) user.age = profile.age;
       ASF.setUser(user);
 
       const schemes = Matcher.match(profile, transcript, 3);
       document.getElementById("resultCard").classList.remove("hidden");
       document.getElementById("said").textContent = `“${transcript}”`;
-      const follow = document.getElementById("followUp");
-      if (profile.follow_up && !schemes.length) {
-        follow.textContent = profile.follow_up;
-        follow.classList.remove("hidden");
-      } else follow.classList.add("hidden");
+
+      // One clarifying question, like the activity diagram in the report.
+      if (profile.follow_up && !user.state && !askedOnce) {
+        askedOnce = true;
+        document.getElementById("followUpQ").textContent = profile.follow_up;
+        followBox.classList.remove("hidden");
+        Speech.speak(profile.follow_up, profile.reply_language || user.language);
+      } else hideFollowUp();
 
       const box = document.getElementById("results");
       box.innerHTML = "";
@@ -115,6 +133,7 @@
             <p><strong>Where:</strong> ${s.applyAt}</p>
             <p><strong>Documents:</strong></p>
             <ul class="docs">${s.documents.map((d) => `<li>${d}</li>`).join("")}</ul>
+            <a class="link" href="${s.applyLink}" target="_blank" rel="noopener">Official site</a>
             <button class="btn saffron apply">Apply (demo)</button>
           `;
           el.querySelector(".apply").onclick = () => {
@@ -130,8 +149,8 @@
           box.appendChild(el);
         });
       }
-      const spoken = Matcher.replyText(schemes, profile);
-      Speech.speak(spoken, profile.reply_language || user.language);
+      const spokenReply = Matcher.replyText(schemes, profile);
+      Speech.speak(spokenReply, profile.reply_language || user.language);
       status.textContent = profile.source === "gemini"
         ? "Understood with Gemini. Showing only schemes from the local list."
         : profile.error
@@ -139,9 +158,21 @@
           : "Understood with keywords. Add a Gemini key on the login page for better language understanding.";
     }
 
-    Matcher.load().catch(() => {
-      status.textContent = "Could not load schemes.json";
-    });
+    function newSearch(spoken) {
+      turns = [spoken];
+      askedOnce = false;
+      return run(spoken);
+    }
+
+    document.getElementById("followUpSend").onclick = async () => {
+      const answer = document.getElementById("followUpA").value.trim();
+      if (!answer) return;
+      turns.push(answer);
+      document.getElementById("followUpA").value = "";
+      hideFollowUp();
+      await run(answer);
+    };
+    document.getElementById("followUpSkip").onclick = hideFollowUp;
 
     mic.onclick = async () => {
       if (!Speech.supported()) {
@@ -153,7 +184,7 @@
       try {
         const text = await Speech.listen(user.language);
         document.getElementById("typed").value = text;
-        await run(text);
+        await newSearch(text);
       } catch (err) {
         status.textContent = "Mic error: " + err.message;
       } finally {
@@ -161,7 +192,7 @@
       }
     };
 
-    document.getElementById("findBtn").onclick = () => run(document.getElementById("typed").value);
+    document.getElementById("findBtn").onclick = () => newSearch(document.getElementById("typed").value);
   </script>
 </body>
 </html>

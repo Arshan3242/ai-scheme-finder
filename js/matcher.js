@@ -1,10 +1,6 @@
 const Matcher = {
-  schemes: [],
-
-  async load() {
-    const res = await fetch("data/schemes.json");
-    this.schemes = await res.json();
-    return this.schemes;
+  all() {
+    return window.SCHEMES || [];
   },
 
   score(scheme, profile, transcript) {
@@ -33,7 +29,7 @@ const Matcher = {
   },
 
   match(profile, transcript, limit = 3) {
-    return this.schemes
+    return this.all()
       .map((scheme) => ({ scheme, score: this.score(scheme, profile, transcript) }))
       .filter((row) => row.score >= 25)
       .sort((a, b) => b.score - a.score)
